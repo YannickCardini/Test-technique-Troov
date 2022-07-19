@@ -11,7 +11,7 @@
           id="input-1"
           v-model="form.email"
           type="email"
-          placeholder="Entrez votre email"
+          placeholder="Entrer votre email"
           required
         ></b-form-input>
       </b-form-group>
@@ -24,7 +24,7 @@
         <b-form-input
           id="input-2"
           v-model="form.password"
-          placeholder="Entrez votre mot de passe"
+          placeholder="Entrer votre mot de passe"
           required
         ></b-form-input>
       </b-form-group>
@@ -34,6 +34,11 @@
     <b-card class="mt-3" header="Form Data Result">
       <pre class="m-0">{{ form }}</pre>
     </b-card>
+
+    <div>
+      Vous n'avez pas encore de compte ?
+      <router-link to="/inscription">Inscrivez-vous</router-link> !
+    </div>
   </div>
 </template>
 
@@ -51,7 +56,16 @@ export default {
   methods: {
     onSubmit(event) {
       event.preventDefault();
-      alert(JSON.stringify(this.form));
+      fetch("http://localhost:3001/api/getOne/" + this.form.email)
+        .then(function (response) {
+          return response.json();
+        })
+        .then(function (json) {
+          console.log(json);
+        })
+        .catch(function (error) {
+          alert(error);
+        });
     },
   },
 };

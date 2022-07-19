@@ -1,7 +1,7 @@
 <template>
   <div style="padding:5%">
     <tittle />
-    <login-page />
+    <register />
   </div>
 </template>
 
