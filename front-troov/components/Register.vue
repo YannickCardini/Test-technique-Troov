@@ -121,7 +121,7 @@ export default {
           password: encryptedPassword,
         }),
       };
-      fetch("http://localhost:3001/api/post", requestOptions).then(
+      fetch("http://localhost:3001/user/post", requestOptions).then(
         async (response) => {
           const reponseJson = await response.json();
           if (response.status == 201)

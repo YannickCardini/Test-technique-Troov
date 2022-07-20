@@ -1,6 +1,9 @@
 <template>
   <div class="main-tittle">
-    <h1>Test technique <img src="~/assets/logo.png"></h1>
+    <h1>
+      Test technique
+      <router-link to="/"><img src="~/assets/logo.png" /></router-link>
+    </h1>
   </div>
 </template>
 
@@ -9,7 +12,7 @@
   text-align: center;
   margin-bottom: 3%;
 }
-.main-tittle h1{
+.main-tittle h1 {
   font-weight: bold;
 }
 </style>

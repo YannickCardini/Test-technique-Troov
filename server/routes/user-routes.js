@@ -1,11 +1,11 @@
 const express = require('express');
-const Model = require('../models/model');
-const router = express.Router();
+const User = require('../models/user');
+const userRoutes = express.Router();
 
 //Post Method
-router.post('/post', async (req, res) => {
+userRoutes.post('/post', async (req, res) => {
 
-    const user = new Model({
+    const user = new User({
         email: req.body.email,
         password: req.body.password
     })
@@ -23,9 +23,9 @@ router.post('/post', async (req, res) => {
 })
 
 //Get all Method
-router.get('/getAll', async (req, res) => {
+userRoutes.get('/getAll', async (req, res) => {
     try {
-        const user = await Model.find();
+        const user = await User.find();
         res.json(user)
     }
     catch (error) {
@@ -34,9 +34,9 @@ router.get('/getAll', async (req, res) => {
 })
 
 //Get by ID Method
-router.get('/getOne/:email', async (req, res) => {
+userRoutes.get('/getOne/:email', async (req, res) => {
     try {
-        const user = await Model.findOne({email: req.params.email});
+        const user = await User.findOne({email: req.params.email});
         res.json(user);
     }
     catch (error) {
@@ -45,13 +45,13 @@ router.get('/getOne/:email', async (req, res) => {
 })
 
 //Update by ID Method
-router.patch('/update/:id', async (req, res) => {
+userRoutes.patch('/update/:id', async (req, res) => {
     try {
         const id = req.params.id;
         const updateduser = req.body;
         const options = { new: true };
 
-        const result = await Model.findByIdAndUpdate(
+        const result = await User.findByIdAndUpdate(
             id, updateduser, options
         )
 
@@ -63,10 +63,10 @@ router.patch('/update/:id', async (req, res) => {
 })
 
 //Delete by ID Method
-router.delete('/delete/:id', async (req, res) => {
+userRoutes.delete('/delete/:id', async (req, res) => {
     try {
         const id = req.params.id;
-        const user = await Model.findByIdAndDelete(id)
+        const user = await User.findByIdAndDelete(id)
         res.send(`Document with ${user.email} has been deleted..`)
     }
     catch (error) {
@@ -74,4 +74,4 @@ router.delete('/delete/:id', async (req, res) => {
     }
 })
 
-module.exports = router;
+module.exports = userRoutes;

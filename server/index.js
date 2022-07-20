@@ -22,9 +22,12 @@ app.use(cors({
     origin: 'http://localhost:3000'
 }));
 
-const routes = require('./routes/routes');
+const userRoutes = require('./routes/user-routes');
+const personRoutes = require('./routes/person-routes');
 
-app.use('/api', routes)
+app.use('/user', userRoutes);
+app.use('/person', personRoutes);
+
 
 app.listen(3001, () => {
     console.log(`Server Started at ${3001}`)
