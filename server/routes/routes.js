@@ -12,10 +12,13 @@ router.post('/post', async (req, res) => {
 
     try {
         const userToSave = await user.save();
-        res.status(200).json(userToSave)
+        res.status(201).json({ message: "Votre compte sur Test technique Troov a bien été créé" })
     }
     catch (error) {
-        res.status(400).json({ message: error.message })
+        if (error.message.includes("duplicate key error collection:"))
+            res.status(200).json({ message: "Un compte avec l'email: " + user.email + " existe déjà." });
+        else
+            res.status(400).json({ message: error.message })
     }
 })
 
@@ -31,13 +34,13 @@ router.get('/getAll', async (req, res) => {
 })
 
 //Get by ID Method
-router.get('/getOne/:id', async (req, res) => {
+router.get('/getOne/:email', async (req, res) => {
     try {
-        const user = await Model.findById(req.params.id);
-        res.json(user)
+        const user = await Model.findOne({email: req.params.email});
+        res.json(user);
     }
     catch (error) {
-        res.status(500).json({ message: error.message })
+        res.status(500).json({ message: error.message });
     }
 })
 

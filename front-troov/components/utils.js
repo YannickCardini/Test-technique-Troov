@@ -1,7 +1,10 @@
-export function isPasswordIsOk(form) {
-    if (form.password === form.repeat) {
-        if (form.password.length >= 1)
-            return true;
-    }
+export function isPasswordOk(form) {
+    if (form.password === form.repeat && form.password.length >= 8)
+        return true;
     return false;
+}
+
+export function hashPassword(password) {
+    const encryptPassword = require("encrypt-password");
+    return encryptPassword(password, "troov");
 }

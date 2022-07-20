@@ -113,10 +113,11 @@ export default {
   },
   methods: {
     sendNewUser(form) {
+      const encryptedPassword = utils.hashPassword(form.password);
       const requestOptions = {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: form.email, password: form.password }),
+        body: JSON.stringify({ email: form.email, password: encryptedPassword }),
       };
       fetch("http://localhost:3001/api/post", requestOptions).then(
         async (response) => {
@@ -142,7 +143,7 @@ export default {
     },
     onSubmit(event) {
       event.preventDefault();
-      if (utils.isPasswordIsOk(this.form)) this.sendNewUser(this.form);
+      if (utils.isPasswordOk(this.form)) this.sendNewUser(this.form);
       else alert("Mot de passe trop court ou non identique !");
     },
   },

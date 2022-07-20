@@ -24,6 +24,7 @@
         <b-form-input
           id="input-2"
           v-model="form.password"
+          type="password"
           placeholder="Entrer votre mot de passe"
           required
         ></b-form-input>
@@ -31,11 +32,8 @@
 
       <b-button type="submit" variant="primary">Se connecter</b-button>
     </b-form>
-    <b-card class="mt-3" header="Form Data Result">
-      <pre class="m-0">{{ form }}</pre>
-    </b-card>
 
-    <div>
+    <div class="loginpage-inscription">
       Vous n'avez pas encore de compte ?
       <router-link to="/inscription">Inscrivez-vous</router-link> !
     </div>
@@ -43,6 +41,8 @@
 </template>
 
 <script>
+const utils = require("./utils.js");
+
 export default {
   data() {
     return {
@@ -57,11 +57,10 @@ export default {
     onSubmit(event) {
       event.preventDefault();
       fetch("http://localhost:3001/api/getOne/" + this.form.email)
-        .then(function (response) {
-          return response.json();
-        })
-        .then(function (json) {
-          console.log(json);
+        .then(async (response) => {
+          const json = await response.json();
+          if (json.password === utils.hashPassword(this.form.password))
+            this.$router.push({ path: "/inscription" });
         })
         .catch(function (error) {
           alert(error);
@@ -70,3 +69,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.loginpage-inscription {
+  margin-top: 1%;
+}
+</style>

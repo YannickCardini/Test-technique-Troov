@@ -5,7 +5,7 @@ Installer les dépendances:
 npm i
 ```
 
-Lancer le serveur sur le port 3000:
+Lancer le serveur sur le port 3001:
 ```
 npm start
 ```
