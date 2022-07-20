@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div >
     <tittle />
-    <tableau />
+    <register />
   </div>
 </template>
 

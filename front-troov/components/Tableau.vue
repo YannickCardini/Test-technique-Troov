@@ -2,7 +2,7 @@
   <b-container fluid>
     <!-- User Interface controls -->
     <b-row>
-      <b-col lg="6" class="my-1 search-bar">
+      <b-col lg="6" class="search-bar">
         <b-form-group
           label="Recherche"
           label-for="filter-input"
@@ -72,16 +72,6 @@
         </b-card>
       </template>
     </b-table>
-
-    <!-- Info modal -->
-    <b-modal
-      :id="infoModal.id"
-      :title="infoModal.title"
-      ok-only
-      @hide="resetInfoModal"
-    >
-      <pre>{{ infoModal.content }}</pre>
-    </b-modal>
 
     <b-row>
       <b-col md="12" lg="6" offset-lg="3" class="my-1">
@@ -168,11 +158,6 @@ export default {
       sortDirection: "asc",
       filter: null,
       filterOn: [],
-      infoModal: {
-        id: "info-modal",
-        title: "",
-        content: "",
-      },
     };
   },
   computed: {
@@ -209,7 +194,7 @@ export default {
 </script>
 
 <style scoped>
-.search-bar{
-  margin:2%;
+.search-bar {
+  margin: 2%;
 }
 </style>

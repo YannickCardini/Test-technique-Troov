@@ -9,12 +9,23 @@ export function hashPassword(password) {
     return encryptPassword(password, "troov");
 }
 
-export function createAlert(title,text,icon,confirmButtonText){
+export function createAlert(title, text, icon, confirmButtonText) {
     const Swal = require("sweetalert2");
     return Swal.fire({
         title: title,
         text: text,
         icon: icon,
         confirmButtonText: confirmButtonText,
-      });
+    });
+}
+
+export function jsonIsEmpty(obj) {
+    if (
+        obj &&
+        Object.keys(obj).length === 0 &&
+        Object.getPrototypeOf(obj) === Object.prototype
+    )
+        return true;
+    return false;
+
 }

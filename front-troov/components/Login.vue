@@ -35,7 +35,7 @@
 
     <div class="loginpage-inscription">
       Vous n'avez pas encore de compte ?
-      <router-link to="/inscription">Inscrivez-vous</router-link> !
+      <router-link to="/">Inscrivez-vous</router-link> !
     </div>
   </div>
 </template>
@@ -59,7 +59,7 @@ export default {
       fetch("http://localhost:3001/api/getOne/" + this.form.email)
         .then(async (response) => {
           const json = await response.json();
-          if (!json){
+          if (!json) {
             utils.createAlert(
               "Identifiants incorrect !",
               "Il n'y a pas de compte enregistré pour cette adresse e-mail.",
@@ -69,7 +69,10 @@ export default {
             return;
           }
           if (json.password === utils.hashPassword(this.form.password))
-            this.$router.push({ path: "/inscription" });
+            this.$router.push({
+              name: "gestionObjet",
+              params: { email: this.form.email },
+            });
           else
             utils.createAlert(
               "Mot de passe incorrect !",
