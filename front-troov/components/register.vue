@@ -98,7 +98,6 @@
 </template>
 
 <script>
-const Swal = require("sweetalert2");
 const utils = require("./utils.js");
 
 export default {
@@ -117,34 +116,45 @@ export default {
       const requestOptions = {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: form.email, password: encryptedPassword }),
+        body: JSON.stringify({
+          email: form.email,
+          password: encryptedPassword,
+        }),
       };
       fetch("http://localhost:3001/api/post", requestOptions).then(
         async (response) => {
           const reponseJson = await response.json();
           if (response.status == 201)
-            Swal.fire({
-              title: "Compte créé avec succès!",
-              text: reponseJson.message,
-              icon: "success",
-              confirmButtonText: "Se connecter",
-            }).then((result) => {
-              if (result.isConfirmed) this.$router.push({ path: "/" });
-            });
+            utils
+              .createAlert(
+                "Compte créé avec succès!",
+                reponseJson.message,
+                "success",
+                "Se connecter"
+              )
+              .then((result) => {
+                if (result.isConfirmed) this.$router.push({ path: "/" });
+              });
           else
-            Swal.fire({
-              title: "Erreur !",
-              text: reponseJson.message,
-              icon: "error",
-              confirmButtonText: "Fermer",
-            });
+            utils.createAlert(
+              "Erreur !",
+              reponseJson.message,
+              "error",
+              "Fermer"
+            );
         }
       );
     },
     onSubmit(event) {
       event.preventDefault();
       if (utils.isPasswordOk(this.form)) this.sendNewUser(this.form);
-      else alert("Mot de passe trop court ou non identique !");
+      else
+        utils.createAlert(
+          "Mot de passe incorrect !",
+          "Les deux champs de mot de passe doivent être identiques et doivent comporter au moins 8 caractères.",
+          "error",
+          "Fermer"
+        );
     },
   },
 };

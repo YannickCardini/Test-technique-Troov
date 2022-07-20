@@ -59,11 +59,27 @@ export default {
       fetch("http://localhost:3001/api/getOne/" + this.form.email)
         .then(async (response) => {
           const json = await response.json();
+          if (!json){
+            utils.createAlert(
+              "Identifiants incorrect !",
+              "Il n'y a pas de compte enregistré pour cette adresse e-mail.",
+              "error",
+              "Fermer"
+            );
+            return;
+          }
           if (json.password === utils.hashPassword(this.form.password))
             this.$router.push({ path: "/inscription" });
+          else
+            utils.createAlert(
+              "Mot de passe incorrect !",
+              "",
+              "error",
+              "Fermer"
+            );
         })
         .catch(function (error) {
-          alert(error);
+          utils.createAlert("Erreur !", error, "error", "Fermer");
         });
     },
   },
