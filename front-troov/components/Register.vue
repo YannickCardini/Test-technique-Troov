@@ -90,7 +90,7 @@
         </div>
         <div>
           Vous avez déjà un compte ?
-          <router-link to="/">Connectez-vous</router-link> !
+          <router-link to="/connexion">Connectez-vous</router-link> !
         </div>
       </div>
     </div>

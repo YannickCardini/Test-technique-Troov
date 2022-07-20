@@ -1,7 +1,7 @@
 <template>
-  <div >
+  <div>
     <tittle />
-    <register />
+    <login />
   </div>
 </template>
 
@@ -12,6 +12,6 @@ import Tittle from "~/components/Tittle.vue";
 
 export default Vue.extend({
   components: { Tittle },
-  name: "InscriptionPage",
+  name: "ConnexionPage",
 });
 </script>

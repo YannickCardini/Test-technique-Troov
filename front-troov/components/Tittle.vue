@@ -1,6 +1,6 @@
 <template>
   <div class="main-tittle">
-    <h1>Test technique <img src="logo.png"></h1>
+    <h1>Test technique <img src="~/assets/logo.png"></h1>
   </div>
 </template>
 

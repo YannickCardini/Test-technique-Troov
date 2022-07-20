@@ -1,14 +1,13 @@
 <template>
-  <div style="padding:5%">
+  <div>
     <tittle />
-    <login-page />
+    <tableau />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import Tittle from "~/components/Tittle.vue";
-
 
 export default Vue.extend({
   components: { Tittle },
