@@ -56,7 +56,7 @@ export default {
   methods: {
     onSubmit(event) {
       event.preventDefault();
-      fetch("http://localhost:3001/api/getOne/" + this.form.email)
+      fetch("http://localhost:3001/user/getOne/" + this.form.email)
         .then(async (response) => {
           const json = await response.json();
           if (!json) {

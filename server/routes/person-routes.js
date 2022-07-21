@@ -25,13 +25,13 @@ personRoutes.post('/post', async (req, res) => {
 })
 
 //Get all Method
-personRoutes.get('/getAll', async (req, res) => {
+personRoutes.get('/getAll/:email', async (req, res) => {
     try {
-        const person = await Person.find();
-        res.json(person)
+        const person = await Person.find({email: req.params.email});
+        res.json(person);
     }
     catch (error) {
-        res.status(500).json({ message: error.message })
+        res.status(500).json({ message: error.message });
     }
 })
 

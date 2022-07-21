@@ -1,7 +1,41 @@
 <template>
   <b-container fluid>
-    <!-- User Interface controls -->
+    <b-row class="first-row-text"> <h4>Ajouter une personne:</h4></b-row>
     <b-row>
+      <b-col lg="6">
+        <b-form-input v-model="nom" placeholder="Entrer un nom"></b-form-input>
+        <p>Nommez la personne</p>
+      </b-col>
+      <b-col lg="2">
+        <div>
+          <b-form-spinbutton
+            v-model="age"
+            min="1"
+            max="100"
+          ></b-form-spinbutton>
+          <p>Sélectionnez un âge</p>
+        </div>
+      </b-col>
+      <b-col lg="2">
+        <b-form-select
+          v-model="isActive"
+          :options="activeOptions"
+        ></b-form-select>
+        <p>La personne est-elle active ?</p>
+      </b-col>
+      <b-col>
+        <b-button
+          variant="success"
+          :disabled="addIsDisabled"
+          @click="addPerson()"
+          >Ajouter</b-button
+        >
+      </b-col>
+    </b-row>
+
+    <b-row class="first-row-text"> <h4>Liste des personnes:</h4></b-row>
+    <!-- Search bar -->
+    <!-- <b-row v-if="items.length > 0">
       <b-col lg="6" class="search-bar">
         <b-form-group
           label="Recherche"
@@ -27,27 +61,28 @@
           </b-input-group>
         </b-form-group>
       </b-col>
-    </b-row>
+    </b-row> -->
 
     <!-- Main table element -->
     <b-table
+      v-if="items.length > 0"
       :items="items"
       :fields="fields"
       :current-page="currentPage"
       :per-page="perPage"
       :filter="filter"
       :filter-included-fields="filterOn"
+      :busy="isBusy"
       :sort-by.sync="sortBy"
       :sort-desc.sync="sortDesc"
       :sort-direction="sortDirection"
       stacked="md"
-      show-empty
       small
       @filtered="onFiltered"
     >
-      <template #cell(name)="row">
+      <!-- <template #cell(name)="row">
         {{ row.value.first }} {{ row.value.last }}
-      </template>
+      </template> -->
 
       <template #cell(actions)="row">
         <b-button
@@ -55,10 +90,10 @@
           @click="info(row.item, row.index, $event.target)"
           class="mr-1"
         >
-          Info modal
+          Modifier
         </b-button>
-        <b-button size="sm" @click="row.toggleDetails">
-          {{ row.detailsShowing ? "Hide" : "Show" }} Details
+        <b-button size="sm" @click="deletePerson(row.item)" variant="danger">
+          Supprimer
         </b-button>
       </template>
 
@@ -71,9 +106,16 @@
           </ul>
         </b-card>
       </template>
+
+      <template #table-busy>
+        <div class="text-center text-danger my-2">
+          <b-spinner class="align-middle"></b-spinner>
+          <strong>Chargement...</strong>
+        </div>
+      </template>
     </b-table>
 
-    <b-row>
+    <b-row v-if="items.length > 8">
       <b-col md="12" lg="6" offset-lg="3" class="my-1">
         <b-pagination
           v-model="currentPage"
@@ -89,45 +131,37 @@
 </template>
 
 <script>
+const utils = require("./utils.js");
+
 export default {
+  computed: {
+    addIsDisabled() {
+      return this.nom.length == 0;
+    },
+  },
   data() {
     return {
-      items: [
-        {
-          isActive: true,
-          age: 40,
-          name: { first: "Dickerson", last: "Macdonald" },
-        },
-        { isActive: false, age: 21, name: { first: "Larsen", last: "Shaw" } },
-        {
-          isActive: false,
-          age: 9,
-          name: { first: "Mini", last: "Navarro" },
-          _rowVariant: "success",
-        },
-        { isActive: false, age: 89, name: { first: "Geneva", last: "Wilson" } },
-        { isActive: true, age: 38, name: { first: "Jami", last: "Carney" } },
-        { isActive: false, age: 27, name: { first: "Essie", last: "Dunlap" } },
-        { isActive: true, age: 40, name: { first: "Thor", last: "Macdonald" } },
-        {
-          isActive: true,
-          age: 87,
-          name: { first: "Larsen", last: "Shaw" },
-          _cellVariants: { age: "danger", isActive: "warning" },
-        },
-        { isActive: false, age: 26, name: { first: "Mitzi", last: "Navarro" } },
-        {
-          isActive: false,
-          age: 22,
-          name: { first: "Genevieve", last: "Wilson" },
-        },
-        { isActive: true, age: 38, name: { first: "John", last: "Carney" } },
-        { isActive: false, age: 29, name: { first: "Dick", last: "Dunlap" } },
+      items: [],
+      age: 20,
+      nom: "",
+      isActive: true,
+      isBusy: false,
+      totalRows: 1,
+      currentPage: 1,
+      perPage: 8,
+      sortBy: "",
+      sortDesc: false,
+      sortDirection: "asc",
+      filter: null,
+      filterOn: [],
+      activeOptions: [
+        { value: true, text: "Oui" },
+        { value: false, text: "Non" },
       ],
       fields: [
         {
           key: "name",
-          label: "Nom complet de la personne",
+          label: "Nom de la personne",
           sortable: true,
           sortDirection: "desc",
         },
@@ -139,7 +173,7 @@ export default {
         },
         {
           key: "isActive",
-          label: "Est active?",
+          label: "Est Active?",
           formatter: (value, key, item) => {
             return value ? "Oui" : "Non";
           },
@@ -149,32 +183,81 @@ export default {
         },
         { key: "actions", label: "Actions" },
       ],
-      totalRows: 1,
-      currentPage: 1,
-      perPage: 8,
-      pageOptions: [5, 10, 15, { value: 100, text: "Show a lot" }],
-      sortBy: "",
-      sortDesc: false,
-      sortDirection: "asc",
-      filter: null,
-      filterOn: [],
     };
   },
-  computed: {
-    sortOptions() {
-      // Create an options list from our fields
-      return this.fields
-        .filter((f) => f.sortable)
-        .map((f) => {
-          return { text: f.label, value: f.key };
+
+  mounted: async function () {
+    this.isBusy = true;
+    this.getPersons();
+  },
+
+  methods: {
+    getPersons() {
+      fetch("http://localhost:3001/person/getAll/" + this.$route.params.email)
+        .then(async (response) => {
+          const json = await response.json();
+          if (json) {
+            this.items = json;
+            this.totalRows = this.items.length;
+            this.isBusy = false;
+          }
+        })
+        .catch(function (error) {
+          utils.createAlert("Erreur !", error, "error", "Fermer");
+          this.isBusy = false;
         });
     },
-  },
-  mounted() {
-    // Set the initial number of items
-    this.totalRows = this.items.length;
-  },
-  methods: {
+    addPerson() {
+      const requestOptions = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: this.$route.params.email,
+          name: this.nom,
+          age: this.age,
+          isActive: this.isActive,
+        }),
+      };
+      this.isBusy = true;
+      fetch("http://localhost:3001/person/post", requestOptions)
+        .then(async (reponse) => {
+          if (reponse.status == 201) {
+            this.getPersons();
+            this.makeToast(this.nom + " a été ajouté(e)");
+          }
+        })
+        .catch(function (error) {
+          this.isBusy = false;
+        });
+    },
+    deletePerson(person) {
+      this.isBusy = true;
+      fetch("http://localhost:3001/person/delete/" + person._id, {
+        method: "DELETE",
+      })
+        .then(async (response) => {
+          if (response.status == 200) {
+            this.currentPage =  1;
+            this.getPersons();
+            this.makeToast(
+              person.name + " a été supprimé(e)",
+              "Personne supprimée",
+              "danger"
+            );
+          }
+        })
+        .catch(function (error) {
+          utils.createAlert("Erreur !", error, "error", "Fermer");
+          this.isBusy = false;
+        });
+    },
+    makeToast(content, title = "Succès", variant = "success") {
+      this.$bvToast.toast(content, {
+        title: title,
+        variant: variant,
+        solid: true,
+      });
+    },
     info(item, index, button) {
       this.infoModal.title = `Row index: ${index}`;
       this.infoModal.content = JSON.stringify(item, null, 2);
@@ -196,5 +279,8 @@ export default {
 <style scoped>
 .search-bar {
   margin: 2%;
+}
+.first-row-text {
+  margin: 2% auto;
 }
 </style>

@@ -10,7 +10,6 @@ const personSchema = new mongoose.Schema({
         type: String,
         trim: true,
         lowercase: true,
-        unique: true,
         required: 'Une adresse email est nécessaire',
         validate: [validateEmail, 'Veuillez indiquer une adresse email valide'],
         match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Veuillez indiquer une adresse email valide']
