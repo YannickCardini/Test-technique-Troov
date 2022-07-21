@@ -1,7 +1,7 @@
 # Test-technique-Troov :memo:
 
 Application web contenant une interface simple qui permet l'authentification et la gestion simple d'un objet Personne.
-L'application web est hebergé sur mon VPS à l'adresse suivante: [51.79.255.217:4000](51.79.255.217:4000)
+L'application web est hebergé sur mon VPS à l'adresse suivante: [51.79.255.217:4000](http://51.79.255.217:4000)
 
 ## Configurations d'installation :wrench:
 
@@ -20,3 +20,5 @@ puis ouvrer un autre terminal pour lancer le back:
 > npm i
 > npm start
 ```
+
+L'application web est visible sur le port 3000 du localhost: [localhost:3000](http://localhost:3000/)

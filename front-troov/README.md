@@ -1,4 +1,4 @@
-# front-troov
+# Front-Troov :dizzy:
 
 Front pour le test technique de TROOV, utilisant le framework nuxt.js.
 
