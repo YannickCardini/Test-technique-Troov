@@ -2,7 +2,7 @@
 
 Front pour le test technique de TROOV, utilisant le framework nuxt.js.
 
-## Configurations d'installation
+## Configurations d'installation :wrench:
 
 ```bash
 # installer les dépendances
