@@ -1,17 +1,14 @@
 <template>
   <div>
-    <tittle />
-    <login />
+    <tittle-component />
+    <login-component />
   </div>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Tittle from "~/components/Tittle.vue";
-
+import Vue from 'vue'
 
 export default Vue.extend({
-  components: { Tittle },
-  name: "ConnexionPage",
-});
+  name: 'ConnexionPage'
+})
 </script>

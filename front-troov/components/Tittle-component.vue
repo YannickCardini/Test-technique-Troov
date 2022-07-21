@@ -16,18 +16,13 @@
 
 <script>
 export default {
-  computed:{
-    buttonData() {
-      let currentRoute = this.$route.name;
-      if(currentRoute == 'index')
-        return {text:"Se connecter",route:"/connexion"}
-      else if(currentRoute == 'connexion')
-        return {text:"S'inscrire",route:"/"}
-      else
-        return {text:"Se déconnecter",route:"/connexion"}
-    },
+  computed: {
+    buttonData () {
+      const currentRoute = this.$route.name
+      if (currentRoute === 'index') { return { text: 'Se connecter', route: '/connexion' } } else if (currentRoute === 'connexion') { return { text: "S'inscrire", route: '/' } } else { return { text: 'Se déconnecter', route: '/connexion' } }
+    }
   }
-};
+}
 </script>
 
 <style>

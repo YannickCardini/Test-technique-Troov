@@ -37,65 +37,58 @@
       Vous n'avez pas encore de compte ?
       <router-link to="/">Inscrivez-vous</router-link> !
     </div>
-      <button @click="tmp()">tmp</button>
 
   </div>
 </template>
 
 <script>
-const utils = require("./utils.js");
+const utils = require('./utils.js')
 
 export default {
-  data() {
+  data () {
     return {
       form: {
-        email: "",
-        password: "",
+        email: '',
+        password: ''
       },
-      show: true,
-    };
+      show: true
+    }
   },
   methods: {
-    onSubmit(event) {
-      event.preventDefault();
-      fetch("http://localhost:3001/user/getOne/" + this.form.email)
+    onSubmit (event) {
+      event.preventDefault()
+      fetch('http://localhost:3001/user/getOne/' + this.form.email)
         .then(async (response) => {
-          const json = await response.json();
+          const json = await response.json()
           if (!json) {
             utils.createAlert(
-              "Identifiants incorrect !",
+              'Identifiants incorrect !',
               "Il n'y a pas de compte enregistré pour cette adresse e-mail.",
-              "error",
-              "Fermer"
-            );
-            return;
+              'error',
+              'Fermer'
+            )
+            return
           }
-          if (json.password === utils.hashPassword(this.form.password))
+          if (json.password === utils.hashPassword(this.form.password)) {
             this.$router.push({
-              name: "gestionObjet",
-              params: { email: this.form.email },
-            });
-          else
+              name: 'personne',
+              params: { email: this.form.email }
+            })
+          } else {
             utils.createAlert(
-              "Mot de passe incorrect !",
-              "",
-              "error",
-              "Fermer"
-            );
+              'Mot de passe incorrect !',
+              '',
+              'error',
+              'Fermer'
+            )
+          }
         })
         .catch(function (error) {
-          utils.createAlert("Erreur !", error, "error", "Fermer");
-        });
-    },
-        tmp() {
-      console.log("here")
-      this.$router.push({
-        name: "gestionObjet",
-        params: { email: "yannick.cardini@gmail.com" },
-      });
-    },
-  },
-};
+          utils.createAlert('Erreur !', error, 'error', 'Fermer')
+        })
+    }
+  }
+}
 </script>
 
 <style scoped>

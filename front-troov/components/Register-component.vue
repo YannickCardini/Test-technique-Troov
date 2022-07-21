@@ -98,66 +98,68 @@
 </template>
 
 <script>
-const utils = require("./utils.js");
+const utils = require('./utils.js')
 
 export default {
-  data() {
+  data () {
     return {
       form: {
-        email: "",
-        password: "",
-        repeat: "",
-      },
-    };
+        email: '',
+        password: '',
+        repeat: ''
+      }
+    }
   },
   methods: {
-    sendNewUser(form) {
-      const encryptedPassword = utils.hashPassword(form.password);
+    sendNewUser (form) {
+      const encryptedPassword = utils.hashPassword(form.password)
       const requestOptions = {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email: form.email,
-          password: encryptedPassword,
-        }),
-      };
-      fetch("http://localhost:3001/user/post", requestOptions).then(
+          password: encryptedPassword
+        })
+      }
+      fetch('http://localhost:3001/user/post', requestOptions).then(
         async (response) => {
-          const reponseJson = await response.json();
-          if (response.status == 201)
+          const reponseJson = await response.json()
+          if (response.status === 201) {
             utils
               .createAlert(
-                "Compte créé avec succès!",
+                'Compte créé avec succès!',
                 reponseJson.message,
-                "success",
-                "Se connecter"
+                'success',
+                'Se connecter'
               )
               .then((result) => {
-                if (result.isConfirmed) this.$router.push({ path: "/" });
-              });
-          else
+                if (result.isConfirmed) this.$router.push({ path: '/connexion' })
+              })
+          } else {
             utils.createAlert(
-              "Erreur !",
+              'Erreur !',
               reponseJson.message,
-              "error",
-              "Fermer"
-            );
+              'error',
+              'Fermer'
+            )
+          }
         }
-      );
+      )
     },
-    onSubmit(event) {
-      event.preventDefault();
-      if (utils.isPasswordOk(this.form)) this.sendNewUser(this.form);
-      else
+    onSubmit (event) {
+      event.preventDefault()
+      if (utils.isPasswordOk(this.form)) this.sendNewUser(this.form)
+      else {
         utils.createAlert(
-          "Mot de passe incorrect !",
-          "Les deux champs de mot de passe doivent être identiques et doivent comporter au moins 8 caractères.",
-          "error",
-          "Fermer"
-        );
-    },
-  },
-};
+          'Mot de passe incorrect !',
+          'Les deux champs de mot de passe doivent être identiques et doivent comporter au moins 8 caractères.',
+          'error',
+          'Fermer'
+        )
+      }
+    }
+  }
+}
 </script>
 
 <style>

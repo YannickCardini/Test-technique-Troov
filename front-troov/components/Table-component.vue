@@ -34,34 +34,6 @@
     </b-row>
 
     <b-row class="first-row-text"> <h4>Liste des personnes:</h4></b-row>
-    <!-- Search bar -->
-    <!-- <b-row v-if="items.length > 0">
-      <b-col lg="6" class="search-bar">
-        <b-form-group
-          label="Recherche"
-          label-for="filter-input"
-          label-cols-sm="3"
-          label-align-sm="right"
-          label-size="sm"
-          class="mb-0"
-        >
-          <b-input-group size="sm">
-            <b-form-input
-              id="filter-input"
-              v-model="filter"
-              type="search"
-              placeholder="Tapez pour rechercher"
-            ></b-form-input>
-
-            <b-input-group-append>
-              <b-button :disabled="!filter" @click="filter = ''"
-                >Effacer</b-button
-              >
-            </b-input-group-append>
-          </b-input-group>
-        </b-form-group>
-      </b-col>
-    </b-row> -->
 
     <!-- Main table element -->
     <b-table
@@ -70,19 +42,13 @@
       :fields="fields"
       :current-page="currentPage"
       :per-page="perPage"
-      :filter="filter"
-      :filter-included-fields="filterOn"
       :busy="isBusy"
-      :sort-by.sync="sortBy"
-      :sort-desc.sync="sortDesc"
+      v-model:sort-by="sortBy"
+      v-model:sort-desc="sortDesc"
       :sort-direction="sortDirection"
       stacked="md"
       small
-      @filtered="onFiltered"
     >
-      <!-- <template #cell(name)="row">
-        {{ row.value.first }} {{ row.value.last }}
-      </template> -->
 
       <template #cell(actions)="row">
         <b-button
@@ -193,196 +159,188 @@
 </template>
 
 <script>
-const utils = require("./utils.js");
+const utils = require('./utils.js')
 
 export default {
   computed: {
-    addIsDisabled() {
-      return this.nom.length == 0;
-    },
+    addIsDisabled () {
+      return this.nom.length === 0
+    }
   },
-  data() {
+  data () {
     return {
       items: [],
       age: 20,
-      nom: "",
+      nom: '',
       isActive: true,
       isBusy: false,
       totalRows: 1,
       currentPage: 1,
       perPage: 8,
-      sortBy: "",
+      sortBy: '',
       sortDesc: false,
-      sortDirection: "asc",
-      filter: null,
-      filterOn: [],
+      sortDirection: 'asc',
       infoModal: {
-        id: "info-modal",
-        title: "",
+        id: 'info-modal',
+        title: '',
         content: {
-          name: "",
-          age: "",
-          isActive: "",
-        },
+          name: '',
+          age: '',
+          isActive: ''
+        }
       },
       activeOptions: [
-        { value: true, text: "Oui" },
-        { value: false, text: "Non" },
+        { value: true, text: 'Oui' },
+        { value: false, text: 'Non' }
       ],
       fields: [
         {
-          key: "name",
-          label: "Nom de la personne",
+          key: 'name',
+          label: 'Nom de la personne',
           sortable: true,
-          sortDirection: "desc",
+          sortDirection: 'desc'
         },
         {
-          key: "age",
-          label: "Âge de la personne",
+          key: 'age',
+          label: 'Âge de la personne',
           sortable: true,
-          class: "text-center",
+          class: 'text-center'
         },
         {
-          key: "isActive",
-          label: "Est Active?",
+          key: 'isActive',
+          label: 'Est Active?',
           formatter: (value, key, item) => {
-            return value ? "Oui" : "Non";
+            return value ? 'Oui' : 'Non'
           },
           sortable: true,
-          sortByFormatted: true,
-          filterByFormatted: true,
+          sortByFormatted: true
         },
-        { key: "actions", label: "Actions" },
-      ],
-    };
+        { key: 'actions', label: 'Actions' }
+      ]
+    }
   },
 
   mounted: async function () {
-    this.isBusy = true;
-    this.getPersons();
+    this.isBusy = true
+    this.getPersons()
   },
 
   methods: {
-    getPersons() {
-      fetch("http://localhost:3001/person/getAll/" + this.$route.params.email)
+    getPersons () {
+      fetch('http://localhost:3001/person/getAll/' + this.$route.params.email)
         .then(async (response) => {
-          const json = await response.json();
+          const json = await response.json()
           if (json) {
-            this.items = json;
-            this.totalRows = this.items.length;
-            this.isBusy = false;
+            this.items = json
+            this.totalRows = this.items.length
+            this.isBusy = false
           }
         })
         .catch(function (error) {
-          utils.createAlert("Erreur !", error, "error", "Fermer");
-          this.isBusy = false;
-        });
+          utils.createAlert('Erreur !', error, 'error', 'Fermer')
+          this.isBusy = false
+        })
     },
-    addPerson() {
+    addPerson () {
       const requestOptions = {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email: this.$route.params.email,
           name: this.nom,
           age: this.age,
-          isActive: this.isActive,
-        }),
-      };
-      this.isBusy = true;
-      fetch("http://localhost:3001/person/post", requestOptions)
+          isActive: this.isActive
+        })
+      }
+      this.isBusy = true
+      fetch('http://localhost:3001/person/post', requestOptions)
         .then(async (reponse) => {
-          if (reponse.status == 201) {
-            this.getPersons();
-            this.makeToast(this.nom + " a été ajouté(e)");
+          if (reponse.status === 201) {
+            this.getPersons()
+            this.makeToast(this.nom + ' a été ajouté(e)')
           }
         })
-        .catch(function (error) {
-          this.isBusy = false;
-        });
+        .catch(function () {
+          this.isBusy = false
+        })
     },
-    editPerson(person) {
+    editPerson (person) {
       const requestOptions = {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: person.name,
           age: person.age,
-          isActive: person.isActive,
-        }),
-      };
-      this.isBusy = true;
-      fetch("http://localhost:3001/person/update/" + person.id, requestOptions)
+          isActive: person.isActive
+        })
+      }
+      this.isBusy = true
+      fetch('http://localhost:3001/person/update/' + person.id, requestOptions)
         .then(async (response) => {
-          if (response.status == 200) {
-            this.getPersons();
-            this.$root.$emit("bv::hide::modal", this.infoModal.id);
+          if (response.status === 200) {
+            this.getPersons()
+            this.$root.$emit('bv::hide::modal', this.infoModal.id)
             this.makeToast(
-              person.name + " a été modifié(e)",
-              "Personne modifiée",
-              "success"
-            );
+              person.name + ' a été modifié(e)',
+              'Personne modifiée',
+              'success'
+            )
           }
         })
         .catch(function (error) {
-          utils.createAlert("Erreur !", error, "error", "Fermer");
-          this.isBusy = false;
-        });
+          utils.createAlert('Erreur !', error, 'error', 'Fermer')
+          this.isBusy = false
+        })
     },
-    deletePerson(person) {
-      this.isBusy = true;
-      fetch("http://localhost:3001/person/delete/" + person._id, {
-        method: "DELETE",
+    deletePerson (person) {
+      this.isBusy = true
+      fetch('http://localhost:3001/person/delete/' + person._id, {
+        method: 'DELETE'
       })
         .then(async (response) => {
-          if (response.status == 200) {
-            this.currentPage = 1;
-            this.getPersons();
+          if (response.status === 200) {
+            this.currentPage = 1
+            this.getPersons()
             this.makeToast(
-              person.name + " a été supprimé(e)",
-              "Personne supprimée",
-              "danger"
-            );
+              person.name + ' a été supprimé(e)',
+              'Personne supprimée',
+              'danger'
+            )
           }
         })
         .catch(function (error) {
-          utils.createAlert("Erreur !", error, "error", "Fermer");
-          this.isBusy = false;
-        });
+          utils.createAlert('Erreur !', error, 'error', 'Fermer')
+          this.isBusy = false
+        })
     },
-    makeToast(content, title = "Succès", variant = "success") {
+    makeToast (content, title = 'Succès', variant = 'success') {
       this.$bvToast.toast(content, {
-        title: title,
-        variant: variant,
-        solid: true,
-      });
+        title,
+        variant,
+        solid: true
+      })
     },
-    info(item, index, button) {
-      this.infoModal.title = `Ligne: ${index + 1} `;
+    info (item, index, button) {
+      this.infoModal.title = `Ligne: ${index + 1} `
       this.infoModal.content = {
         id: item._id,
         name: item.name,
         age: item.age,
-        isActive: item.isActive,
-      };
-      this.$root.$emit("bv::show::modal", this.infoModal.id, button);
+        isActive: item.isActive
+      }
+      this.$root.$emit('bv::show::modal', this.infoModal.id, button)
     },
-    resetInfoModal() {
-      this.infoModal.title = "";
+    resetInfoModal () {
+      this.infoModal.title = ''
       this.infoModal.content = {
-        id: "",
-        name: "",
-        age: "",
-        isActive: "",
-      };
-    },
-    onFiltered(filteredItems) {
-      // Trigger pagination to update the number of buttons/pages due to filtering
-      this.totalRows = filteredItems.length;
-      this.currentPage = 1;
-    },
-  },
-};
+        id: '',
+        name: '',
+        age: '',
+        isActive: ''
+      }
+    }
+  }
+}
 </script>
 
 <style scoped>
