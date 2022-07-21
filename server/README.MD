@@ -1,5 +1,9 @@
 # Troov technical test server side :fax:
 
+A RESTful API using Node, Express, and MongoDB.
+
+## Configurations d'installation
+
 Installer les dépendances:
 ```
 npm i
