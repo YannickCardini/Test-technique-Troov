@@ -37,12 +37,11 @@
       Vous n'avez pas encore de compte ?
       <router-link to="/">Inscrivez-vous</router-link> !
     </div>
-
   </div>
 </template>
 
 <script>
-const utils = require('./utils.js')
+import utils from './utils'
 
 export default {
   data () {

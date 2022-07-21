@@ -98,7 +98,7 @@
 </template>
 
 <script>
-const utils = require('./utils.js')
+import utils from './utils'
 
 export default {
   data () {

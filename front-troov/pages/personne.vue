@@ -8,7 +8,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-const utils = require('~/components/utils.js')
+import utils from '~/components/utils'
 
 export default Vue.extend({
   name: 'PersonnePage',

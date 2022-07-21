@@ -49,7 +49,6 @@
       stacked="md"
       small
     >
-
       <template #cell(actions)="row">
         <b-button
           size="sm"
@@ -70,6 +69,10 @@
         </div>
       </template>
     </b-table>
+
+    <p v-if="items.length == 0" class="no-items">
+      Aucune personne à afficher !
+    </p>
 
     <!-- Info modal -->
     <b-modal
@@ -159,7 +162,7 @@
 </template>
 
 <script>
-const utils = require('./utils.js')
+import utils from './utils'
 
 export default {
   computed: {
@@ -349,5 +352,9 @@ export default {
 }
 .first-row-text {
   margin: 2% auto;
+}
+p.no-items {
+  text-align: center;
+  font-style: italic;
 }
 </style>
