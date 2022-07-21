@@ -1,6 +1,6 @@
 <template>
   <section>
-    <div class="container h-100">
+    <div class="h-100">
       <div class="row d-flex justify-content-center align-items-center h-100">
         <div class="col-lg-12 col-xl-11">
           <div class="card text-black" style="border-radius: 25px">
@@ -88,9 +88,9 @@
             </div>
           </div>
         </div>
-        <div>
+        <div class="link-connexion">
           Vous avez déjà un compte ?
-          <router-link to="/connexion">Connectez-vous</router-link> !
+          <router-link to="/connexion">&nbsp;Connectez-vous</router-link>&nbsp;!
         </div>
       </div>
     </div>
@@ -171,5 +171,8 @@ export default {
 }
 .mx-4 {
   margin-top: 0.5em;
+}
+.link-connexion{
+  display: contents;
 }
 </style>

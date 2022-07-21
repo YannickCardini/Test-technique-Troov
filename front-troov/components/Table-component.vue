@@ -132,7 +132,7 @@
         </b-card>
       </div>
       <b-row style="margin: 3%">
-        <b-col offset="9" cols="3">
+        <b-col offset-sm="9" sm="3">
           <b-button
             block
             variant="success"
