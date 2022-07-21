@@ -37,6 +37,8 @@
       Vous n'avez pas encore de compte ?
       <router-link to="/">Inscrivez-vous</router-link> !
     </div>
+      <button @click="tmp()">tmp</button>
+
   </div>
 </template>
 
@@ -84,6 +86,13 @@ export default {
         .catch(function (error) {
           utils.createAlert("Erreur !", error, "error", "Fermer");
         });
+    },
+        tmp() {
+      console.log("here")
+      this.$router.push({
+        name: "gestionObjet",
+        params: { email: "yannick.cardini@gmail.com" },
+      });
     },
   },
 };

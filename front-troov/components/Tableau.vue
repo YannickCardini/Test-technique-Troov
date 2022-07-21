@@ -97,16 +97,6 @@
         </b-button>
       </template>
 
-      <template #row-details="row">
-        <b-card>
-          <ul>
-            <li v-for="(value, key) in row.item" :key="key">
-              {{ key }}: {{ value }}
-            </li>
-          </ul>
-        </b-card>
-      </template>
-
       <template #table-busy>
         <div class="text-center text-danger my-2">
           <b-spinner class="align-middle"></b-spinner>
@@ -114,6 +104,78 @@
         </div>
       </template>
     </b-table>
+
+    <!-- Info modal -->
+    <b-modal
+      :id="infoModal.id"
+      :title="infoModal.title"
+      hide-footer
+      @hide="resetInfoModal"
+    >
+      <div>
+        <b-card bg-variant="light">
+          <b-form-group
+            label-cols-lg="12"
+            label="Modifier la personne"
+            label-size="lg"
+            label-class="font-weight-bold pt-0"
+            class="mb-0"
+          >
+            <b-form-group
+              label="Nom:"
+              label-for="nested-Nom"
+              label-cols-sm="3"
+              label-align-sm="right"
+            >
+              <b-form-input
+                id="nested-Nom"
+                type="text"
+                v-model="infoModal.content.name"
+              ></b-form-input>
+            </b-form-group>
+
+            <b-form-group
+              label="Âge:"
+              label-for="nested-Age"
+              label-cols-sm="3"
+              label-align-sm="right"
+            >
+              <b-form-input
+                id="nested-Age"
+                type="number"
+                v-model="infoModal.content.age"
+              ></b-form-input>
+            </b-form-group>
+
+            <b-form-group
+              label="Est active:"
+              label-cols-sm="3"
+              label-align-sm="right"
+              class="mb-0"
+            >
+              <b-form-radio-group
+                class="pt-2"
+                v-model="infoModal.content.isActive"
+                :options="[
+                  { text: 'Oui', value: true },
+                  { text: 'Non', value: false },
+                ]"
+              ></b-form-radio-group>
+            </b-form-group>
+          </b-form-group>
+        </b-card>
+      </div>
+      <b-row style="margin: 3%">
+        <b-col offset="9" cols="3">
+          <b-button
+            block
+            variant="success"
+            @click="editPerson(infoModal.content)"
+            >Editer</b-button
+          ></b-col
+        >
+      </b-row>
+    </b-modal>
 
     <b-row v-if="items.length > 8">
       <b-col md="12" lg="6" offset-lg="3" class="my-1">
@@ -154,6 +216,15 @@ export default {
       sortDirection: "asc",
       filter: null,
       filterOn: [],
+      infoModal: {
+        id: "info-modal",
+        title: "",
+        content: {
+          name: "",
+          age: "",
+          isActive: "",
+        },
+      },
       activeOptions: [
         { value: true, text: "Oui" },
         { value: false, text: "Non" },
@@ -230,6 +301,34 @@ export default {
           this.isBusy = false;
         });
     },
+    editPerson(person) {
+      const requestOptions = {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: person.name,
+          age: person.age,
+          isActive: person.isActive,
+        }),
+      };
+      this.isBusy = true;
+      fetch("http://localhost:3001/person/update/" + person.id, requestOptions)
+        .then(async (response) => {
+          if (response.status == 200) {
+            this.getPersons();
+            this.$root.$emit("bv::hide::modal", this.infoModal.id);
+            this.makeToast(
+              person.name + " a été modifié(e)",
+              "Personne modifiée",
+              "success"
+            );
+          }
+        })
+        .catch(function (error) {
+          utils.createAlert("Erreur !", error, "error", "Fermer");
+          this.isBusy = false;
+        });
+    },
     deletePerson(person) {
       this.isBusy = true;
       fetch("http://localhost:3001/person/delete/" + person._id, {
@@ -237,7 +336,7 @@ export default {
       })
         .then(async (response) => {
           if (response.status == 200) {
-            this.currentPage =  1;
+            this.currentPage = 1;
             this.getPersons();
             this.makeToast(
               person.name + " a été supprimé(e)",
@@ -259,13 +358,23 @@ export default {
       });
     },
     info(item, index, button) {
-      this.infoModal.title = `Row index: ${index}`;
-      this.infoModal.content = JSON.stringify(item, null, 2);
+      this.infoModal.title = `Ligne: ${index + 1} `;
+      this.infoModal.content = {
+        id: item._id,
+        name: item.name,
+        age: item.age,
+        isActive: item.isActive,
+      };
       this.$root.$emit("bv::show::modal", this.infoModal.id, button);
     },
     resetInfoModal() {
       this.infoModal.title = "";
-      this.infoModal.content = "";
+      this.infoModal.content = {
+        id: "",
+        name: "",
+        age: "",
+        isActive: "",
+      };
     },
     onFiltered(filteredItems) {
       // Trigger pagination to update the number of buttons/pages due to filtering
